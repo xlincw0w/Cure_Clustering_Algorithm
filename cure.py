@@ -18,15 +18,52 @@ print(data.describe())
 print('\n\n')
 
 
+def euclidean_distance(A, B):
+    return ((A - B)**2).sum()
+
+
+def min_cluster_distance(cluster_a, cluster_b):
+    distance = 99999
+    for point_a in cluster_a.repr_points:
+        for point_b in cluster_b.repr_points:
+            calc_dist = euclidean_distance(point_a, point_b)
+            if (cluster_a.index != cluster_b.index and calc_dist < distance):
+                distance = calc_dist
+
+    return distance
+
+
 class Cluster:
-    def __init__(self, index, points, centroid=0, repr_points=[]):
+    def __init__(self,
+                 index,
+                 points,
+                 centroid=0,
+                 repr_points=[],
+                 closest=None):
         self.index = index
         self.points = points
         self.centroid = centroid
-        self.repr_points = repr_points
+        self.repr_points = points[0]
+        self.closest = closest
+        self.closest_cluster_distance = None
+
+        self.UpdateCentroid()
+
+    def UpdateCentroid(self):
+        self.centroid = np.mean(self.points, axis=0)
+
+    def logAttributes(self):
+        print('\nLogging attributes :\n')
+        print('Index ', self.index)
+        print('Points ', self.points)
+        print('Centroid ', self.centroid)
+        print('Reprentatives points ', self.repr_points)
+        print('Closest cluster index : ', self.closest.index)
+        print('Closest cluster distance : ', self.closest_cluster_distance)
+        print('\n----------\n')
 
 
-class CureCluster:
+class Cure:
     def __init__(self, data, cluster_nbr=3, represent_nbr=4, compression=0.5):
         self.data = data
         self.cluster_nbr = cluster_nbr
@@ -45,6 +82,19 @@ class CureCluster:
             self.clusters = np.append(
                 self.clusters, Cluster(index, np.array([[x_val, y_val]])))
 
+    def initClosestCluster(self):
+        for clus_1 in self.clusters:
+            closest = None
+            distance = 99999
+            for clus_2 in self.clusters:
+                min_clus_dist = min_cluster_distance(clus_1, clus_2)
+                if (min_clus_dist < distance):
+                    closest = clus_2
+                    distance = min_clus_dist
+
+            clus_1.closest = closest
+            clus_1.closest_cluster_distance = distance
+
     def logAttributes(self):
         print('\nLogging attributes :\n')
         print('Data ', self.data)
@@ -61,5 +111,7 @@ class CureCluster:
     # def euclidean_distance(self)
 
 
-Cure = CureCluster(data)
-Cure.logAttributes()
+cure = Cure(data)
+cure.initClosestCluster()
+
+print(cure.clusters[0].logAttributes())
