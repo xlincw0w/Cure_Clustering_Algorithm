@@ -2,15 +2,10 @@ import numpy as np
 
 
 class Cluster:
-    def __init__(self,
-                 index,
-                 points,
-                 centroid=0,
-                 repr_points=np.array([]),
-                 closest=None):
+    def __init__(self, index, points, repr_points=np.array([]), closest=None):
         self.index = index
         self.points = points
-        self.centroid = centroid
+        self.centroid = None
         self.repr_points = points[0]
         self.closest = closest
         self.closest_cluster_distance = None
