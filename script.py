@@ -33,4 +33,5 @@ cl= Cluster(
 )
 
 cl.Update_repr_points()
+print(' fin ')
 
