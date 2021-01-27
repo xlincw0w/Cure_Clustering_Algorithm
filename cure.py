@@ -5,15 +5,16 @@ from cluster import Cluster
 
 
 class Cure:
-    def __init__(self, data, cluster_nbr=3, represent_nbr=4, compression=0.5):
+    def __init__(self, data, cluster_nbr=3, nmbr_repr=4, compression=0.5):
         self.data = data
         self.cluster_nbr = cluster_nbr
-        self.represent_nbr = represent_nbr
+        self.nmbr_repr =nmbr_repr
         self.compression = compression
         self.clusters = np.array([])
 
         self.initClusters()
         self.initClosestCluster()
+
 
     def initClusters(self):
         for row in self.data.iterrows():
@@ -49,6 +50,7 @@ class Cure:
         return distance
 
     def logAttributes(self):
+        
         print('\nLogging attributes :\n')
         print('Data ', self.data)
         print('Clusters number ', self.cluster_nbr)
