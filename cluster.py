@@ -9,7 +9,7 @@ class Cluster:
         self.repr_points=np.array([])
         self.closest = None
         self.closest_cluster_distance = None
-        self.nbr_repr= 3
+        self.nbr_repr= 4
 
         self.UpdateCentroid()
         #self.Update_repr_points()
@@ -17,27 +17,47 @@ class Cluster:
 
     def UpdateCentroid(self):
         self.centroid = np.mean(self.points,axis=0)
-
+        
+    
     def Update_repr_points(self):
-        print('centroide :',self.centroid)
-        farthest_point = self.getFarthestPoint(self.centroid)
+        queue_points=np.array([])
+        queue_points=self.points
+        farthest_point = self.getFarthestPoint(self.centroid,queue_points)
         self.repr_points = np.append(self.repr_points, [farthest_point])
-        while (self.nbr_repr > len(self.repr_points) and len(self.points) > len(self.repr_points)):
+        self.repr_points =np.reshape(self.repr_points,(-1,2))
+        queue_points=self.depop_array(queue_points)
+
+        while (self.nbr_repr > (len(self.repr_points))and len(self.points) > len(self.repr_points) and len(queue_points)>0  ):
             moy=np.mean(self.repr_points,axis=0)
-            promoted = self.getFarthestPoint(moy)
+            promoted = self.getFarthestPoint(moy,queue_points)
             self.repr_points = np.append(self.repr_points, promoted)
             self.repr_points =np.reshape(self.repr_points,(-1,2))
-        print('repr points:',self.repr_points)    
-            
+            queue_points=self.depop_array(queue_points)
+        print('representative points:',self.repr_points)
+        return self.repr_points
+         
 
 
-           
-
-    def getFarthestPoint(self, a):
+    def depop_array(self,arr):
+        
+        for i in self.repr_points:
+            if i in arr and len(arr)>0:
+                index=np.where((i==arr[:,None]).all(-1))[0]
+                print('index ',index)
+                arr=np.delete(arr,index,axis=0)
+        return(arr)
+       
+        
+        
+       
+    
+         
+    def getFarthestPoint(self, a,arr):
         max_distance = 0
         returned_point = a
-        for point in (self.points):
-            if point not in self.repr_points:
+        q_points=np.array([])
+        q_points=arr
+        for point in (q_points):
                 dist = self.euclidean_distance(a, point)
                 if (dist > max_distance):
                   max_distance = dist 
