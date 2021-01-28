@@ -25,12 +25,13 @@ cl= Cluster(
     5,
     np.array([
         [1, 2],
-        [2, 3],
+        [10, 15],
         [3, 4],
-        [1, 4],
-        [2, 3],
+        [1, 4]
+       
     ])
 )
+
 
 cl.Update_repr_points()
 print(' fin ')

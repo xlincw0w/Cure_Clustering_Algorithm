@@ -16,32 +16,43 @@ class Cluster:
         
 
     def UpdateCentroid(self):
+        result = np.where(self.points == [1, 4])
         self.centroid = np.mean(self.points,axis=0)
+        
 
+    def depop_array(self,arr):
+        for i in range(0,len(arr)):
+            if arr[i] in self.repr_points:
+                arr=np.delete(arr,i,0)
+        return arr
+          
+
+    
     def Update_repr_points(self):
-        print('centroide :',self.centroid)
-        farthest_point = self.getFarthestPoint(self.centroid)
+        queue_points=self.points
+        farthest_point = self.getFarthestPoint(self.centroid,queue_points)
         self.repr_points = np.append(self.repr_points, [farthest_point])
-        while (self.nbr_repr > len(self.repr_points) and len(self.points) > len(self.repr_points)):
+        self.repr_points =np.reshape(self.repr_points,(-1,2))
+        queue_points=self.depop_array(queue_points)
+
+        while (self.nbr_repr > (len(self.repr_points))and len(self.points) > len(self.repr_points) and  len(queue_points)>0 ):
             moy=np.mean(self.repr_points,axis=0)
-            promoted = self.getFarthestPoint(moy)
+            promoted = self.getFarthestPoint(moy,queue_points)
             self.repr_points = np.append(self.repr_points, promoted)
             self.repr_points =np.reshape(self.repr_points,(-1,2))
-        print('repr points:',self.repr_points)    
-            
-
-
-           
-
-    def getFarthestPoint(self, a):
+            queue_points=self.depop_array(queue_points)
+        print('repr points:',self.repr_points)
+        
+    def getFarthestPoint(self, a,arr):
         max_distance = 0
         returned_point = a
-        for point in (self.points):
-            if point not in self.repr_points:
+        queue_points=arr
+        for point in (queue_points):
                 dist = self.euclidean_distance(a, point)
                 if (dist > max_distance):
                   max_distance = dist 
                   returned_point = point
+        
         return returned_point
         
 
