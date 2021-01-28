@@ -18,19 +18,24 @@ print('\n')
 print(data.describe())
 print('\n\n')
 
-a=np.array([2,3])
+a=np.array([
+            [1,2],
+            [3,4],
+            [1,4],
+            [4,2],
+            [4,4],
+            [5,4]
+            ])
 cure = Cure(data)
 print('REPR : ')
 cl= Cluster(
     5,
     np.array([
-        [1, 2],
-        [2, 3],
-        [3, 4],
-        [1, 4],
-        [2, 3],
+        [50,60]
+       
     ])
 )
+
 
 cl.Update_repr_points()
 print(' fin ')
