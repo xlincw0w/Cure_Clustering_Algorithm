@@ -59,7 +59,6 @@ class Cluster:
         return ((A - B)**2).sum()
 
     def logAttributes(self):
-
         print('\nLogging attributes :\n')
         print('Index ', self.index)
         print('Points ', self.points)

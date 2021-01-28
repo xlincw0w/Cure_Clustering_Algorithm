@@ -2,8 +2,8 @@ import numpy as np
 
 
 class Queue:
-    def __init__(self):
-        self.elements = np.array([])
+    def __init__(self, arr=np.array([])):
+        self.elements = arr
 
     def enqueue(self, elem):
         self.elements = np.append(self.elements, elem)
