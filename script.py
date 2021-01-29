@@ -26,4 +26,6 @@ if __name__ == '__main__':
 
     # cure.visualizeData()
     cure.run()
+
+    input('Press any key !')
     cure.visualizeClusters()
