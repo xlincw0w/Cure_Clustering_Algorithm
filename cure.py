@@ -1,11 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 from cluster import Cluster
 from queue import Queue
-from threading import Thread
-from multiprocessing import Process
 from time import time
 
 
@@ -20,7 +17,7 @@ class Cure:
         self.result = self.data
 
         self.initClusters()
-        self.initClosestCluster(0, len(self.clusters), '#')
+        self.initClosestCluster()
 
         # Clusters queue
         self.q = Queue(arr=self.clusters)
@@ -36,8 +33,8 @@ class Cure:
                 Cluster(index, np.array([[x_val, y_val]], dtype='float16'),
                         self.nbr_repr))
 
-    def initClosestCluster(self, start, end, thread_id):
-        for i in range(start, end):
+    def initClosestCluster(self):
+        for i in range(len(self.clusters)):
             closest = None
             distance = 99999
             for clus in self.clusters:
@@ -50,17 +47,17 @@ class Cure:
             self.clusters[i].closest = closest
             self.clusters[i].closest_cluster_distance = distance
 
-    # def UpdateClosestCluster(self, cluster):
-    #     closest = None
-    #     distance = 99999
-    #     for clus in self.clusters:
-    #         min_clus_dist = self.min_cluster_distance(cluster, clus)
-    #         if (min_clus_dist < distance):
-    #             closest = clus
-    #             distance = min_clus_dist
+    def UpdateClosestCluster(self, cluster):
+        closest = None
+        distance = 99999
+        for clus in self.clusters:
+            min_clus_dist = self.min_cluster_distance(cluster, clus)
+            if (min_clus_dist < distance):
+                closest = clus
+                distance = min_clus_dist
 
-    #     cluster.closest = closest
-    #     cluster.closest_cluster_distance = distance
+        cluster.closest = closest
+        cluster.closest_cluster_distance = distance
 
     def min_cluster_distance(self, cluster_a, cluster_b):
         distance = 99999
@@ -87,11 +84,17 @@ class Cure:
             max_length = len(self.clusters)
 
             cluster_to_kick = np.array([], dtype='int8')
+            cluster_to_update = np.array([], dtype='int8')
 
             for i in range(0, len(self.clusters)):
                 if (self.clusters[i].index == index
                         or self.clusters[i].index == closest.index):
                     cluster_to_kick = np.append(cluster_to_kick, i)
+
+                if (self.clusters[i].closest.index == index
+                        or self.clusters[i].closest.index == closest.index):
+                    cluster_to_update = np.append(cluster_to_update,
+                                                  self.clusters[i])
 
             self.clusters = [
                 self.clusters[i] for i in range(0, len(self.clusters))
@@ -105,71 +108,9 @@ class Cure:
             self.q = Queue(arr=self.clusters)
             self.clusters = np.append(self.clusters, new_cluster)
 
-            self.initClosestCluster(0, len(self.clusters), '0')
-
-            # Threads = []
-            # nbr_threads = 10
-            # track = int(len(self.clusters) / nbr_threads)
-            # diff = len(self.clusters) - track * nbr_threads
-
-            # for i in range(0, nbr_threads):
-            #     added_value = 0
-
-            #     if (i == nbr_threads - 1):
-            #         added_value = diff
-
-            #     Threads = np.append(
-            #         Threads,
-            #         Process(target=self.initClosestCluster,
-            #                 args=(
-            #                     track * i,
-            #                     track * (i + 1) + added_value,
-            #                     i,
-            #                 )))
-
-            # for th in Threads:
-            #     th.start()
-
-            # for th in Threads:
-            #     th.join()
-
-            # track = int(len(self.clusters) / 5)
-            # diff = len(self.clusters) - track * 5
-
-            # Th1 = Thread(target=self.initClosestCluster,
-            #              args=(
-            #                  0,
-            #                  track,
-            #                  '1',
-            #              ))
-            # Th2 = Thread(target=self.initClosestCluster,
-            #              args=(track, track * 2, '2'))
-            # Th3 = Thread(target=self.initClosestCluster,
-            #              args=(track * 2, track * 3, '3'))
-            # Th4 = Thread(target=self.initClosestCluster,
-            #              args=(
-            #                  track * 3,
-            #                  track * 4,
-            #                  '4',
-            #              ))
-            # Th5 = Thread(target=self.initClosestCluster,
-            #              args=(
-            #                  track * 4,
-            #                  track * 5 + diff,
-            #                  '5',
-            #              ))
-
-            # Th1.start()
-            # Th2.start()
-            # Th3.start()
-            # Th4.start()
-            # Th5.start()
-
-            # Th1.join()
-            # Th2.join()
-            # Th3.join()
-            # Th4.join()
-            # Th5.join()
+            self.UpdateClosestCluster(new_cluster)
+            for clus in cluster_to_update:
+                self.UpdateClosestCluster(clus)
 
             self.q = Queue(arr=self.clusters)
             self.q.enqueue(new_cluster)

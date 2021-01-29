@@ -10,7 +10,7 @@ import numpy as np
 if __name__ == '__main__':
 
     data = pd.DataFrame(read_sample(FCPS_SAMPLES.SAMPLE_LSUN),
-                        columns=['X', 'y']).sample(100)
+                        columns=['X', 'y'])
 
     print('\nExploring head data')
     print(data.head())
@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     cure = Cure(data)
 
-    cure.visualizeData()
+    # cure.visualizeData()
 
     cure.run()
     cure.write_labels()
