@@ -24,10 +24,9 @@ if __name__ == '__main__':
 
     cure = Cure(data)
 
-    # cure.visualizeData()
+    cure.visualizeData()
 
     cure.run()
-    cure.write_labels()
 
     cure.visualizeClusters()
 

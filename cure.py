@@ -118,6 +118,7 @@ class Cure:
         for i in range(0, len(self.clusters)):
             self.clusters[i].index = i
 
+        self.write_labels()
         print('Time consumed : ', int(time() - before), 'sec')
 
     def logAttributes(self):
