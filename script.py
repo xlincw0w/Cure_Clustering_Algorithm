@@ -22,13 +22,8 @@ if __name__ == '__main__':
     print(data.describe())
     print('\n')
 
-    cure = Cure(data)
+    cure = Cure(data, cluster_nbr=3, nbr_repr=4)
 
-    cure.visualizeData()
-
+    # cure.visualizeData()
     cure.run()
-
     cure.visualizeClusters()
-
-    # for cluster in cure.clusters:
-    #     cluster.logAttributes()

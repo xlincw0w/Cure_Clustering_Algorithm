@@ -134,14 +134,15 @@ class Cure:
         return ((A - B)**2).sum()
 
     def write_labels(self):
-        clus1 = pd.DataFrame(self.clusters[0].points, columns=['X', 'y'])
-        clus1['Cluster'] = 0
-        clus2 = pd.DataFrame(self.clusters[1].points, columns=['X', 'y'])
-        clus2['Cluster'] = 1
-        clus3 = pd.DataFrame(self.clusters[2].points, columns=['X', 'y'])
-        clus3['Cluster'] = 2
+        clusters = []
+        for i in range(self.cluster_nbr):
+            clus = pd.DataFrame(self.clusters[i].points, columns=['X', 'y'])
+            clus['Cluster'] = i
 
-        result = pd.concat([clus1, clus2, clus3])
+            clusters.append(clus)
+            print(clus.head())
+
+        result = pd.concat(clusters)
         self.result = result
 
     def visualizeData(self):
