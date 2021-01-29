@@ -140,7 +140,7 @@ class Cure:
             clus['Cluster'] = i
 
             clusters.append(clus)
-            print(clus.head())
+            print('\n', clus.head(), '\n')
 
         result = pd.concat(clusters)
         self.result = result
