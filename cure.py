@@ -7,13 +7,12 @@ from time import time
 
 
 class Cure:
-    def __init__(self, data, cluster_nbr=3, nbr_repr=4, compression=0.5):
+    def __init__(self, data, cluster_nbr=3, nbr_repr=7, compression=0.5):
         self.data = data
         self.cluster_nbr = cluster_nbr
         self.nbr_repr = nbr_repr
-        self.compression = compression
+        self.compression = compression 
         self.clusters = np.array([])
-
         self.result = self.data
 
         self.initClusters()
@@ -31,7 +30,7 @@ class Cure:
             self.clusters = np.append(
                 self.clusters,
                 Cluster(index, np.array([[x_val, y_val]], dtype='float16'),
-                        self.nbr_repr))
+                        self.nbr_repr,self.compression))
 
     def initClosestCluster(self):
         for i in range(len(self.clusters)):
@@ -103,7 +102,8 @@ class Cure:
 
             new_cluster = Cluster(index=index,
                                   points=new_points,
-                                  nbr_repr=nbr_repr)
+                                  nbr_repr=nbr_repr,
+                                  compression=self.compression)
 
             self.q = Queue(arr=self.clusters)
             self.clusters = np.append(self.clusters, new_cluster)
@@ -133,6 +133,7 @@ class Cure:
     def euclidean_distance(self, A, B):
         return ((A - B)**2).sum()
 
+
     def write_labels(self):
         clusters = []
         for i in range(self.cluster_nbr):
@@ -159,3 +160,6 @@ class Cure:
                     self.result['y'],
                     c=self.result['Cluster'])
         plt.show()
+
+  
+

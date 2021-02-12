@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     cure = Cure(data, cluster_nbr=3, nbr_repr=4)
 
-    # cure.visualizeData()
+    cure.visualizeData()
     cure.run()
 
     input('Press any key !')
