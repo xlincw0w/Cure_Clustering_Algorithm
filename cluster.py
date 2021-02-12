@@ -2,7 +2,7 @@ import numpy as np
 
 
 class Cluster:
-    def __init__(self, index, points, nbr_repr,compression):
+    def __init__(self, index, points, nbr_repr, compression):
         self.index = index
         self.points = points
         self.centroid = None
@@ -10,13 +10,12 @@ class Cluster:
         self.closest = None
         self.closest_cluster_distance = None
         self.nbr_repr = nbr_repr
-        self.compression=compression
+        self.compression = compression
         self.UpdateCentroid()
         self.Update_repr_points()
 
     def UpdateCentroid(self):
         self.centroid = np.mean(self.points, axis=0)
-       
 
     def Update_repr_points(self):
         queue_points = np.array([])
@@ -34,7 +33,7 @@ class Cluster:
             self.repr_points = np.append(self.repr_points, promoted)
             self.repr_points = np.reshape(self.repr_points, (-1, 2))
             queue_points = self.depop_array(queue_points)
-        self.repr_points=self.shrinking_repr()
+        self.repr_points = self.shrinking_repr()
         return self.repr_points
 
     def depop_array(self, arr):
@@ -57,18 +56,19 @@ class Cluster:
         return returned_point
 
     def cluster_size(self):
-       return self.points.size
+        return self.points.size
 
     def euclidean_distance(self, A, B):
         return ((A - B)**2).sum()
-    
-    def shrinking_repr (self):
-        dist_centr=np.array([])
+
+    def shrinking_repr(self):
+        dist_centr = np.array([])
         for i in self.repr_points:
-            dist_centr=np.append(dist_centr,i-(self.compression*(i-self.centroid)))
-            dist_centr=np.reshape(dist_centr, (-1, 2))
-        return(dist_centr)
-    
+            dist_centr = np.append(
+                dist_centr, i - (self.compression * (i - self.centroid)))
+            dist_centr = np.reshape(dist_centr, (-1, 2))
+        return (dist_centr)
+
     def logAttributes(self):
         print('\nLogging attributes :\n')
         print('Index ', self.index)
