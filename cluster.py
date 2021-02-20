@@ -28,12 +28,15 @@ class Cluster:
         while (self.nbr_repr > (len(self.repr_points))
                and len(self.points) > len(self.repr_points)
                and len(queue_points) > 0):
+
             moy = np.mean(self.repr_points, axis=0)
             promoted = self.getFarthestPoint(moy, queue_points)
             self.repr_points = np.append(self.repr_points, promoted)
             self.repr_points = np.reshape(self.repr_points, (-1, 2))
             queue_points = self.depop_array(queue_points)
+
         self.repr_points = self.shrinking_repr()
+
         return self.repr_points
 
     def depop_array(self, arr):
